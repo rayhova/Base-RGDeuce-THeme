@@ -48,4 +48,10 @@
 			$('nav ul#primary-menu li a').css('color', newval );
 		} );
 	} );
+	//Update main menu link color in real time...
+	wp.customize( 'rgdeuce_header_color', function( value ) {
+		value.bind( function( newval ) {
+			$('header#masthead').css('color', newval );
+		} );
+	} );
 } )( jQuery );
