@@ -35,4 +35,17 @@
 			}
 		} );
 	} );
+
+	//Update site link color in real time...
+	wp.customize( 'rgdeuce_link_color', function( value ) {
+		value.bind( function( newval ) {
+			$('a, a:visited').css('color', newval );
+		} );
+	} );
+	//Update main menu link color in real time...
+	wp.customize( 'rgdeuce_menu_color', function( value ) {
+		value.bind( function( newval ) {
+			$('nav ul#primary-menu li a').css('color', newval );
+		} );
+	} );
 } )( jQuery );

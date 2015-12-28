@@ -107,6 +107,30 @@ function rgdeuce_widgets_init() {
 		'before_title'  => '<h2 class="widget-title">',
 		'after_title'   => '</h2>',
 	) );
+	register_sidebar( array(
+		'name' => __( 'Footer – Left', 'rgdeuce' ),
+		'id' => 'footer-left',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
+	register_sidebar( array(
+		'name' => __( 'Footer – Center', 'rgdeuce' ),
+		'id' => 'footer-center',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
+	register_sidebar( array(
+		'name' => __( 'Footer – Right', 'rgdeuce' ),
+		'id' => 'footer-right',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
 }
 add_action( 'widgets_init', 'rgdeuce_widgets_init' );
 
@@ -120,6 +144,15 @@ function register_footer_menu() {
 }
 add_action( 'init', 'register_footer_menu' );
 
+function register_top_menu() {
+  register_nav_menu('top-menu',__( 'Top Menu' ));
+}
+add_action( 'init', 'register_top_menu' );
+function register_mobile_menu() {
+  register_nav_menu('mobile-menu',__( 'Mobile Menu' ));
+}
+add_action( 'init', 'register_mobile_menu' );
+
 
 /**
  * Enqueue scripts and styles.
@@ -127,7 +160,10 @@ add_action( 'init', 'register_footer_menu' );
 function rgdeuce_scripts() {
 	wp_enqueue_style( 'rgdeuce-style', get_stylesheet_uri() );
 
+	wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css' );
+
 	wp_enqueue_script( 'rgdeuce-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20120206', true );
+	/*wp_enqueue_script( 'header-resize', get_template_directory_uri() . '/js/header-resize.js', array(), '1.0', true ); */
 
 	wp_enqueue_script( 'rgdeuce-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20130115', true );
 
@@ -138,6 +174,15 @@ function rgdeuce_scripts() {
 	wp_enqueue_script( 'bootstrap', get_template_directory_uri() . '/bootstrap/js/bootstrap.min.js', array( 'jquery' ), 'v3.3.5', true );
 }
 add_action( 'wp_enqueue_scripts', 'rgdeuce_scripts' );
+function google_fonts() {
+	$query_args = array(
+		'family' => 'Open+Sans:400,300,400italic,600,700,800,700italic'
+		'subset' => 'latin,latin-ext',
+	);
+	wp_register_style( 'google_fonts', add_query_arg( $query_args, "//fonts.googleapis.com/css" ), array(), null );
+            }
+            
+add_action('wp_enqueue_scripts', 'google_fonts');
 
 /**
  * Implement the Custom Header feature.
@@ -165,4 +210,102 @@ require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/jetpack.php';
 
 add_filter('widget_text', 'do_shortcode');
+
+
+add_action( 'wp_enqueue_scripts', 'add_jquery' );
+add_action( 'wp_footer', 'fixed_menu_onscroll' );
+
+function add_jquery()
+{
+	wp_enqueue_script( 'jquery' );
+}
+
+function fixed_menu_onscroll()
+{
+?>
+	<script type="text/javascript">
+	jQuery(document).ready(function($){
+		$(window).bind('scroll', function() {
+			if ($(window).scrollTop() > 100) {
+				 $('header#masthead').addClass('fixed');
+    } else {
+        $('header#masthead').removeClass('fixed');
+			}
+		});
+	});
+	</script>
+<?php
+}
+
+
+add_image_size( 'team-thumb', 250, 250, array( 'center', 'center' ) ); // Hard crop left top
+
+add_filter( 'image_size_names_choose', 'my_custom_sizes' );
+ 
+function my_custom_sizes( $sizes ) {
+    return array_merge( $sizes, array(
+        'team-thumb' => __( 'Team Thumbnail' ),
+    ) );
+}
+
+/*
+* Creating a function to create our CPT
+*/
+
+function custom_post_type() {
+
+// Set UI labels for Custom Post Type
+	$labels = array(
+		'name'                => _x( 'Team Members', 'Post Type General Name', 'rgdeuce' ),
+		'singular_name'       => _x( 'Team Member', 'Post Type Singular Name', 'rgdeuce' ),
+		'menu_name'           => __( 'Team Members', 'rgdeuce' ),
+		'parent_item_colon'   => __( 'Parent Team Member', 'rgdeuce' ),
+		'all_items'           => __( 'All Team Members', 'rgdeuce' ),
+		'view_item'           => __( 'View Team Member', 'rgdeuce' ),
+		'add_new_item'        => __( 'Add New Team Member', 'rgdeuce' ),
+		'add_new'             => __( 'Add New', 'rgdeuce' ),
+		'edit_item'           => __( 'Edit Team Member', 'rgdeuce' ),
+		'update_item'         => __( 'Update Team Member', 'rgdeuce' ),
+		'search_items'        => __( 'Search Team Member', 'rgdeuce' ),
+		'not_found'           => __( 'Not Found', 'rgdeuce' ),
+		'not_found_in_trash'  => __( 'Not found in Trash', 'rgdeuce' ),
+	);
+	
+// Set other options for Custom Post Type
+	
+	$args = array(
+		'label'               => __( 'team-members', 'rgdeuce' ),
+		'description'         => __( 'Team Members', 'rgdeuce' ),
+		'labels'              => $labels,
+		// Features this CPT supports in Post Editor
+		'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields', ),
+		// You can associate this CPT with a taxonomy or custom taxonomy. 
+		/*'taxonomies'          => array( 'genres' ), */
+		/* A hierarchical CPT is like Pages and can have
+		* Parent and child items. A non-hierarchical CPT
+		* is like Posts.
+		*/	
+		'hierarchical'        => false,
+		'public'              => true,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'show_in_nav_menus'   => true,
+		'show_in_admin_bar'   => true,
+		'menu_position'       => 5,
+		'can_export'          => true,
+		'has_archive'         => true,
+		'exclude_from_search' => false,
+		'publicly_queryable'  => true,
+		'capability_type'     => 'post',
+	);
+	
+	// Registering your Custom Post Type
+	register_post_type( 'team-members', $args );
+
+}
+
+/* Hook into the 'init' action so that the function
+* Containing our post type registration is not 
+* unnecessarily executed. 
+*/
 
