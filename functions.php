@@ -209,6 +209,11 @@ require get_template_directory() . '/inc/customizer.php';
  */
 require get_template_directory() . '/inc/jetpack.php';
 
+/**
+ * Load packaged plugins file
+ */
+require get_template_directory() . '/inc/plugin-include.php';
+
 add_filter('widget_text', 'do_shortcode');
 
 
