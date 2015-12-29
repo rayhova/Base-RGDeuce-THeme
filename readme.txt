@@ -1,4 +1,4 @@
-=== 5iveSpot ===
+=== RGDeuce Base Theme ===
 
 Contributors: automattic
 Tags: translation-ready, custom-background, theme-options, custom-menu, post-formats, threaded-comments
@@ -13,7 +13,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-5ive Spot Bar Responsive Theme
+RGDeuce Responsive Base Theme
 
 
 

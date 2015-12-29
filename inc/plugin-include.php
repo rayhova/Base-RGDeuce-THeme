@@ -58,13 +58,13 @@ function my_theme_register_required_plugins() {
 		),
 
 		// This is an example of how to include a plugin from an arbitrary external source in your theme.
-		array(
-			'name'         => 'TGM New Media Plugin', // The plugin name.
-			'slug'         => 'tgm-new-media-plugin', // The plugin slug (typically the folder name).
-			'source'       => 'https://s3.amazonaws.com/tgm/tgm-new-media-plugin.zip', // The plugin source.
-			'required'     => true, // If false, the plugin is only 'recommended' instead of required.
-			'external_url' => 'https://github.com/thomasgriffin/New-Media-Image-Uploader', // If set, overrides default API URL and points to an external URL.
-		),
+		// array(
+		// 	'name'         => 'TGM New Media Plugin', // The plugin name.
+		// 	'slug'         => 'tgm-new-media-plugin', // The plugin slug (typically the folder name).
+		// 	'source'       => 'https://s3.amazonaws.com/tgm/tgm-new-media-plugin.zip', // The plugin source.
+		// 	'required'     => true, // If false, the plugin is only 'recommended' instead of required.
+		// 	'external_url' => 'https://github.com/thomasgriffin/New-Media-Image-Uploader', // If set, overrides default API URL and points to an external URL.
+		// ),
 
 		// This is an example of how to include a plugin from a GitHub repository in your theme.
 		// This presumes that the plugin code is based in the root of the GitHub repository
@@ -82,6 +82,12 @@ function my_theme_register_required_plugins() {
 			'required'  => true,
 			'force_activation'   => true, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
 		),
+		array(
+			'name'      => 'WordPress Importer',
+			'slug'      => 'wordpress-importer',
+			'required'  => true,
+			'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
+		),
 
 		// This is an example of the use of 'is_callable' functionality. A user could - for instance -
 		// have WPSEO installed *or* WPSEO Premium. The slug would in that last case be different, i.e.
@@ -89,11 +95,11 @@ function my_theme_register_required_plugins() {
 		// By setting 'is_callable' to either a function from that plugin or a class method
 		// `array( 'class', 'method' )` similar to how you hook in to actions and filters, TGMPA can still
 		// recognize the plugin as being installed.
-		array(
-			'name'        => 'WordPress SEO by Yoast',
-			'slug'        => 'wordpress-seo',
-			'is_callable' => 'wpseo_init',
-		),
+		// array(
+		// 	'name'        => 'WordPress SEO by Yoast',
+		// 	'slug'        => 'wordpress-seo',
+		// 	'is_callable' => 'wpseo_init',
+		// ),
 
 	);
 
