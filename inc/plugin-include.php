@@ -20,7 +20,7 @@
 /**
  * Include the TGM_Plugin_Activation class.
  */
-include_once get_stylesheet_directory() . 'inc/class-tgm-plugin-activation.php';
+include_once get_stylesheet_directory() . '/inc/class-tgm-plugin-activation.php';
 
 add_action( 'tgmpa_register', 'my_theme_register_required_plugins' );
 /**
@@ -201,7 +201,7 @@ function my_theme_register_required_plugins() {
 			'nag_type'                        => 'updated', // Determines admin notice type - can only be 'updated', 'update-nag' or 'error'.
 		),
 		*/
-	);
+	//);
 
-	tgmpa( $plugins, $config );
+	//tgmpa( $plugins, $config );
 }

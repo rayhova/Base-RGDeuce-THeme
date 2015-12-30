@@ -176,7 +176,7 @@ function rgdeuce_scripts() {
 add_action( 'wp_enqueue_scripts', 'rgdeuce_scripts' );
 function google_fonts() {
 	$query_args = array(
-		'family' => 'Open+Sans:400,300,400italic,600,700,800,700italic'
+		'family' => 'Open+Sans:400,300,400italic,600,700,800,700italic',
 		'subset' => 'latin,latin-ext',
 	);
 	wp_register_style( 'google_fonts', add_query_arg( $query_args, "//fonts.googleapis.com/css" ), array(), null );
