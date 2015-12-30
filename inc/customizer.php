@@ -10,12 +10,6 @@
  *
  * @param WP_Customize_Manager $wp_customize Theme Customizer object.
  */
-function rgdeuce_customize_register( $wp_customize ) {
-	$wp_customize->get_setting( 'blogname' )->transport         = 'postMessage';
-	$wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
-	$wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
-}
-add_action( 'customize_register', 'rgdeuce_customize_register' );
 function rgdeuce_theme_customizer( $wp_customize ) {
 	
     // Logo upload
@@ -171,7 +165,7 @@ $wp_customize->add_setting( 'rgdeuce_header_color', array(
 		'type'                  => 'textarea'
 	) );
 }
-add_action( 'theme_customizer', 'rgdeuce_theme_customizer' );
+add_action( 'customize_register', 'rgdeuce_theme_customizer' );
 
 
 
@@ -182,6 +176,36 @@ function rgdeuce_customize_preview_js() {
 	wp_enqueue_script( 'rgdeuce_customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), '20130508', true );
 }
 add_action( 'customize_preview_init', 'rgdeuce_customize_preview_js' );
+
+/**
+ * Sanitizes a hex color. Identical to core's sanitize_hex_color(), which is not available on the wp_head hook.
+ *
+ * Returns either '', a 3 or 6 digit hex color (with #), or null.
+ * For sanitizing values without a #, see sanitize_hex_color_no_hash().
+ *
+ * @since 1.7
+ */
+function rgdeuce_sanitize_hex_color( $color ) {
+	if ( '' === $color )
+		return '';
+	// 3 or 6 hex digits, or the empty string.
+	if ( preg_match('|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) )
+		return $color;
+	return null;
+}
+/**
+ * Sanitizes our post content value (either excerpts or full post content).
+ *
+ * @since 1.7
+ */
+function rgdeuce_sanitize_index_content( $content ) {
+	if ( 'option2' == $content ) {
+		return 'option2';
+	} else {
+		return 'option1';
+	}
+}
+
 
 /**
  * Add CSS in <head> for styles handled by the theme customizer
@@ -282,31 +306,3 @@ function rgdeuce_add_customizer_css() {
 
 add_action( 'wp_head', 'rgdeuce_add_customizer_css' );
 
-/**
- * Sanitizes a hex color. Identical to core's sanitize_hex_color(), which is not available on the wp_head hook.
- *
- * Returns either '', a 3 or 6 digit hex color (with #), or null.
- * For sanitizing values without a #, see sanitize_hex_color_no_hash().
- *
- * @since 1.7
- */
-function rgdeuce_sanitize_hex_color( $color ) {
-	if ( '' === $color )
-		return '';
-	// 3 or 6 hex digits, or the empty string.
-	if ( preg_match('|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) )
-		return $color;
-	return null;
-}
-/**
- * Sanitizes our post content value (either excerpts or full post content).
- *
- * @since 1.7
- */
-function rgdeuce_sanitize_index_content( $content ) {
-	if ( 'option2' == $content ) {
-		return 'option2';
-	} else {
-		return 'option1';
-	}
-}
