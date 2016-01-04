@@ -284,7 +284,7 @@ function custom_post_type() {
 // Set other options for Custom Post Type
 	
 	$args = array(
-		'label'               => __( 'team-members', 'rgdeuce' ),
+		'label'               => __( 'team-members	', 'rgdeuce' ),
 		'description'         => __( 'Team Members', 'rgdeuce' ),
 		'labels'              => $labels,
 		// Features this CPT supports in Post Editor
@@ -327,3 +327,27 @@ add_action( 'init', 'custom_post_type', 0 );
 * unnecessarily executed. 
 */
 
+
+// register two taxonomies to go with the post type
+function team_register_taxonomy() {
+	// set up labels
+	$labels = array(
+		'name'              => 'Team Departments',
+		'singular_name'     => 'Team Department',
+		'search_items'      => 'Search Team Departments',
+		'all_items'         => 'All Team Departments',
+		'edit_item'         => 'Edit Team Department',
+		'update_item'       => 'Update Team Departments',
+		'add_new_item'      => 'Add New Team Department',
+		'new_item_name'     => 'New Team Department',
+		'menu_name'         => 'Team Departments'
+	);
+	// register taxonomy
+	register_taxonomy( 'teamcat', 'team-members', array(
+		'hierarchical' => true,
+		'labels' => $labels,
+		'query_var' => true,
+		'show_admin_column' => true
+	) );
+}
+add_action( 'init', 'team_register_taxonomy' );

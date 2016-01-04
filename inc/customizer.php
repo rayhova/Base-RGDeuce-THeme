@@ -152,7 +152,7 @@ $wp_customize->add_setting( 'rgdeuce_header_color', array(
     ) );
  
     $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'rgdeuce_footer-link_color', array(
-        'label'	   => 'Link and Highlight Color',
+        'label'	   => 'Footer Link and Highlight Color',
         'section'  => 'colors',
         'settings' => 'rgdeuce_footer-link_color',
     ) ) );
