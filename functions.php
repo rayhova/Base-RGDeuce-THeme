@@ -284,7 +284,7 @@ function custom_post_type() {
 // Set other options for Custom Post Type
 	
 	$args = array(
-		'label'               => __( 'team', 'rgdeuce' ),
+		'label'               => __( 'team-members', 'rgdeuce' ),
 		'description'         => __( 'Team Members', 'rgdeuce' ),
 		'labels'              => $labels,
 		// Features this CPT supports in Post Editor
