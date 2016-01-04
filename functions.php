@@ -253,6 +253,11 @@ function my_custom_sizes( $sizes ) {
     ) );
 }
 
+
+/*
+* Creating a function to create our CPT
+*/
+
 /*
 * Creating a function to create our CPT
 */
@@ -266,12 +271,12 @@ function custom_post_type() {
 		'menu_name'           => __( 'Team Members', 'rgdeuce' ),
 		'parent_item_colon'   => __( 'Parent Team Member', 'rgdeuce' ),
 		'all_items'           => __( 'All Team Members', 'rgdeuce' ),
-		'view_item'           => __( 'View Team Member', 'rgdeuce' ),
-		'add_new_item'        => __( 'Add New Team Member', 'rgdeuce' ),
+		'view_item'           => __( 'View Team Members', 'rgdeuce' ),
+		'add_new_item'        => __( 'Add New Team Members', 'rgdeuce' ),
 		'add_new'             => __( 'Add New', 'rgdeuce' ),
 		'edit_item'           => __( 'Edit Team Member', 'rgdeuce' ),
 		'update_item'         => __( 'Update Team Member', 'rgdeuce' ),
-		'search_items'        => __( 'Search Team Member', 'rgdeuce' ),
+		'search_items'        => __( 'Search Team Members', 'rgdeuce' ),
 		'not_found'           => __( 'Not Found', 'rgdeuce' ),
 		'not_found_in_trash'  => __( 'Not found in Trash', 'rgdeuce' ),
 	);
@@ -279,13 +284,13 @@ function custom_post_type() {
 // Set other options for Custom Post Type
 	
 	$args = array(
-		'label'               => __( 'team-members', 'rgdeuce' ),
+		'label'               => __( 'team', 'rgdeuce' ),
 		'description'         => __( 'Team Members', 'rgdeuce' ),
 		'labels'              => $labels,
 		// Features this CPT supports in Post Editor
 		'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields', ),
 		// You can associate this CPT with a taxonomy or custom taxonomy. 
-		/*'taxonomies'          => array( 'genres' ), */
+		'taxonomies'          => array( 'departments' ),
 		/* A hierarchical CPT is like Pages and can have
 		* Parent and child items. A non-hierarchical CPT
 		* is like Posts.
@@ -308,6 +313,14 @@ function custom_post_type() {
 	register_post_type( 'team-members', $args );
 
 }
+
+/* Hook into the 'init' action so that the function
+* Containing our post type registration is not 
+* unnecessarily executed. 
+*/
+
+add_action( 'init', 'custom_post_type', 0 );
+
 
 /* Hook into the 'init' action so that the function
 * Containing our post type registration is not 
