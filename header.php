@@ -23,6 +23,12 @@
 <body <?php body_class(); ?>>
 <div id="page" class="hfeed site">
 	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'rgdeuce' ); ?></a>
+<div id="utility-bar"><div class="container container-fluid">
+<div class="col-md-6"> 
+</div>
+<div class="col-md-6"><nav><?php wp_nav_menu( array( 'theme_location' => 'top-menu', 'menu_id' => 'top-menu' ) ); ?></nav></div>
+</div>
+</div><!-- #utility-bar -->
 
 	<header id="masthead" class="site-header" role="banner"><div class="container container-fluid">
 		<div class="col-md-4">
@@ -50,5 +56,9 @@
 		</div>
 		</div><!-- .container -->
 	</header><!-- #masthead -->
+	<?php if ( is_page_template( 'home-page.php' ) || is_page_template( 'full-width-page.php' )  ) { ?>
+	<div class="container full-width"> 
+<?php } else { ?>
 	<div class="container container-fluid content-container">
 	<div id="content" class="site-content">
+<?php } ?>

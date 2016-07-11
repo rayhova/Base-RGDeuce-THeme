@@ -20,11 +20,11 @@ function my_customizer_social_media_array() {
 
 function rgdeuce_theme_customizer( $wp_customize ) {
 	
-    // Logo upload
+    // Homepage - Logo Upload
     $wp_customize->add_section( 'rgdeuce_logo_section' , array(
-	    'title'       => __( 'Logo', 'rgdeuce' ),
+	    'title'       => __( 'Header Options', 'rgdeuce' ),
 	    'priority'    => 30,
-	    'description' => 'Upload a logo to replace the default site name and description in the header',
+	    'description' => 'Upload a logo to replace the default site name and description in the header, select utility bar',
 	) );
 	$wp_customize->add_setting( 'rgdeuce_logo', array(
 		'sanitize_callback' => 'esc_url_raw',
@@ -33,6 +33,89 @@ function rgdeuce_theme_customizer( $wp_customize ) {
 		'label'    => __( 'Logo', 'rgdeuce' ),
 		'section'  => 'rgdeuce_logo_section',
 		'settings' => 'rgdeuce_logo',
+	) ) );
+	 $wp_customize->add_setting( 'rgdeuce_footer_logo', array(
+        'sanitize_callback' => 'esc_url_raw',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'rgdeuce_footer_logo', array(
+        'label'    => __( 'Footer Logo', 'rgdeuce' ),
+        'section'  => 'rgdeuce_logo_section',
+        'settings' => 'rgdeuce_footer_logo',
+        
+    ) ) );
+    $wp_customize->add_setting('rgdeuce_display_utilitybar', array(
+        'default'    =>  'true',
+        'transport'  =>  'postMessage'
+	    )
+	)
+	$wp_customize->add_control('rgdeuce_display_utilitybar', array(
+        'section'   => 'rgdeuce_logo_section',
+        'label'     => 'Display Utility Bar?',
+        'type'      => 'checkbox'
+	    )
+	);
+
+    //home page options 
+$wp_customize->add_section( 'rgdeuce_homepage_section' , array(
+	    'title'       => __( 'Homepage', 'rgdeuce' ),
+	    'priority'    => 30,
+	    'description' => 'Homepage options - Upload an image to be your main slider on your homepage; select your amount of bucket sections',
+	) );
+	$wp_customize->add_setting( 'rgdeuce_homeslide', array(
+		'sanitize_callback' => 'esc_url_raw',
+	) );
+	$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'rgdeuce_homeslide', array(
+		'label'    => __( 'Homepage Slider', 'rgdeuce' ),
+		'section'  => 'rgdeuce_homepage_section',
+		'settings' => 'rgdeuce_homeslide',
+	) ) );
+	$wp_customize->add_setting( 'rgdeuce_home_buckets', array(
+		'default'	        => 'option1',
+		'sanitize_callback' => 'rgdeuce_sanitize_index_content',
+	) );
+	$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'rgdeuce_home_buckets', array(
+		'label'    => __( 'Homepage Bucket Sections', 'rgdeuce' ),
+		'section'  => 'rgdeuce_homepage_section',
+		'settings' => 'rgdeuce_home_buckets',
+		'type'     => 'radio',
+		'choices'  => array(
+			'option1' => 'No sections',
+			'option2' => '1 section',
+			'option3' => '2 sections',
+			'option4' => '3 sections',
+			'option5' => '4 Sections',
+			'option6' => '5 sections',
+			'option7' => '6 Sections',
+			),
+	) ) );
+
+ //home page options 
+$wp_customize->add_section( 'rgdeuce_typography_section' , array(
+	    'title'       => __( 'Typography', 'rgdeuce' ),
+	    'priority'    => 30,
+	    'description' => 'Typography - Select your fonts',
+	) );
+	$wp_customize->add_setting( 'rgdeuce_main_font', array(
+		'default'	        => 'opensans',
+		'sanitize_callback' => 'rgdeuce_sanitize_index_content',
+	) );
+	$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'rgdeuce_home_buckets', array(
+		'label'    => __( 'Homepage Bucket Sections', 'rgdeuce' ),
+		'section'  => 'rgdeuce_typography_section',
+		'settings' => 'rgdeuce_main_font',
+		'type'     => 'select',
+		'choices'  => array(
+			'opensans' => 'Open Sans',
+			'arial' => 'Arial',
+			'courier' => 'Courier New',
+			'lato' => 'Lato',
+			'montserrat' => 'Montserrat',
+			'raleway' => 'Raleway',
+			'roboto' => 'Roboto',
+			'slabo' => 'Slabo 27px',
+			'times' => 'Times New Roman',
+			'ubuntu' => 'Ubuntu',
+			),
 	) ) );
     // Choose excerpt or full content on blog
     $wp_customize->add_section( 'rgdeuce_layout_section' , array(
@@ -56,8 +139,19 @@ function rgdeuce_theme_customizer( $wp_customize ) {
 	) ) );
 
 // Highlight and link color
+	$wp_customize->add_setting( 'rgdeuce_utilitybar_color', array(
+        'default'           => '#000',
+        'transport'         => 'postMessage',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ) );
+ 
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'rgdeuce_utilitybar_color', array(
+        'label'	   => 'Utility Bar Color',
+        'section'  => 'colors',
+        'settings' => 'rgdeuce_utilitybar_color',
+    ) ) );
 $wp_customize->add_setting( 'rgdeuce_header_color', array(
-        'default'           => '#ff0000',
+        'default'           => '#ffffff',
         'transport'         => 'postMessage',
         'sanitize_callback' => 'sanitize_hex_color',
     ) );
@@ -145,18 +239,8 @@ $wp_customize->add_setting( 'rgdeuce_header_color', array(
         'section'  => 'colors',
         'settings' => 'rgdeuce_link_color',
     ) ) );
-    $wp_customize->add_setting( 'rgdeuce_footer-link_color', array(
-        'default'           => '#ff0000',
-        'transport'         => 'postMessage',
-        'sanitize_callback' => 'sanitize_hex_color',
-    ) );
- 
-    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'rgdeuce_footer-link_color', array(
-        'label'	   => 'Footer Link and Highlight Color',
-        'section'  => 'colors',
-        'settings' => 'rgdeuce_footer-link_color',
-    ) ) );
-
+    
+    
     /*--------------------------------------------------------------
 	// CSS Styles
 --------------------------------------------------------------*/
@@ -200,6 +284,77 @@ $wp_customize->add_setting( 'rgdeuce_header_color', array(
  
 		$priority = $priority + 5;
 	}
+
+	// Footer Section
+    $wp_customize->add_section( 'rgdeuce_footer_section' , array(
+	    'title'       => __( 'Footer', 'rgdeuce' ),
+	    'priority'    => 35,
+	    'description' => 'Footer Options',
+	    ) );
+	$wp_customize->add_setting('rgdeuce_footer_text', array(
+        'default'            => 'All Rights Reserved',
+        'sanitize_callback'  => 'rgdeuce_sanitize_copyright',
+        'transport'          => 'postMessage'
+    )
+);
+	$wp_customize->add_control('rgdeuce_footer_text', array(
+        'section'  => 'rgdeuce_footer_section',
+        'label'    => 'Copyright Message',
+        'type'     => 'text'
+    )
+);
+	$wp_customize->add_setting( 'rgdeuce_footer_link_color', array(
+        'default'           => '#ff0000',
+        'transport'         => 'postMessage',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ) );
+ 
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'rgdeuce_footer_link_color', array(
+        'label'	   => 'Footer Link and Highlight Color',
+        'section'  => 'rgdeuce_footer_section',
+        'settings' => 'rgdeuce_footer_link_color',
+    ) ) );
+
+    $wp_customize->add_setting( 'rgdeuce_footer_color', array(
+        'default'           => '#000000',
+        'transport'         => 'postMessage',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'rgdeuce_footer_color', array(
+        'label'	   => 'Footer  Color',
+        'section'  => 'rgdeuce_footer_section',
+        'settings' => 'rgdeuce_footer_color',
+    ) ) );
+$wp_customize->add_setting( 'rgdeuce_footer_text_color', array(
+        'default'           => '#ffffff',
+        'transport'         => 'postMessage',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'rgdeuce_footer_text_color', array(
+        'label'	   => 'Footer  Color',
+        'section'  => 'rgdeuce_footer_section',
+        'settings' => 'rgdeuce_footer_text_color',
+    ) ) );
+$wp_customize->add_setting( 'rgdeuce_bottom_footer_color', array(
+        'default'           => '#333333',
+        'transport'         => 'postMessage',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'rgdeuce_bottom_footer_color', array(
+        'label'	   => 'Footer  Color',
+        'section'  => 'rgdeuce_footer_section',
+        'settings' => 'rgdeuce_bottom_footer_color',
+    ) ) );
+$wp_customize->add_setting( 'rgdeuce_bottom_footer_text_color', array(
+        'default'           => '#ffffff',
+        'transport'         => 'postMessage',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'rgdeuce_bottom_footer_text_color', array(
+        'label'	   => 'Footer  Color',
+        'section'  => 'rgdeuce_footer_section',
+        'settings' => 'rgdeuce_bottom_footer_text_color',
+    ) ) );
 
 }
 add_action( 'customize_register', 'rgdeuce_theme_customizer' );
@@ -250,12 +405,36 @@ function rgdeuce_sanitize_index_content( $content ) {
  * @since 1.5
  */
 function rgdeuce_add_customizer_css() {
+	$font = get_theme_mod( 'rgdeuce_main_font' ) );
+	?>
+	<!-- rgdeuce customizer CSS -->
+	<style>
+		body {
+			font-family: '<?php echo $font; ?>', sans-serif;
+		}
+		
+	</style>
+<?php }
+
+{
 	$color = rgdeuce_sanitize_hex_color( get_theme_mod( 'rgdeuce_header_color' ) );
 	?>
 	<!-- rgdeuce customizer CSS -->
 	<style>
 		header#masthead {
-			color: <?php echo $color; ?>;
+			background: <?php echo $color; ?>;
+		}
+		
+	</style>
+<?php }
+
+{
+	$color = rgdeuce_sanitize_hex_color( get_theme_mod( 'rgdeuce_utilitybar_color' ) );
+	?>
+	<!-- rgdeuce customizer CSS -->
+	<style>
+		#utility-bar {
+			background: <?php echo $color; ?>;
 		}
 		
 	</style>
@@ -330,7 +509,21 @@ function rgdeuce_add_customizer_css() {
 	</style>
 <?php }
 {
-	$color = rgdeuce_sanitize_hex_color( get_theme_mod( 'rgdeuce_footer-link_color' ) );
+	$color = rgdeuce_sanitize_hex_color( get_theme_mod( 'rgdeuce_footer_color' ) );
+	$textcolor = rgdeuce_sanitize_hex_color( get_theme_mod( 'rgdeuce_footer_text_color' ) );
+	?>
+	<!-- rgdeuce customizer CSS -->
+	<style>
+		footer
+		{
+			background: <?php echo $color; ?>;
+			color: <?php echo $textcolor; ?>;
+		}
+	</style>
+
+<?php }
+{
+	$color = rgdeuce_sanitize_hex_color( get_theme_mod( 'rgdeuce_footer_link_color' ) );
 	?>
 	<!-- rgdeuce customizer CSS -->
 	<style>
@@ -339,7 +532,29 @@ function rgdeuce_add_customizer_css() {
 			color: <?php echo $color; ?>;
 		}
 	</style>
+	<?php }
+{
+	$color = rgdeuce_sanitize_hex_color( get_theme_mod( 'rgdeuce_bottom_footer_color' ) );
+	$textcolor = rgdeuce_sanitize_hex_color( get_theme_mod( 'rgdeuce_bottom_footer_text_color' ) );
+	?>
+	<!-- rgdeuce customizer CSS -->
+	<style>
+		.bottom-footer
+		{
+			background: <?php echo $color; ?>;
+			color: <?php echo $textcolor; ?>;
+		}
+	</style>
+
 <?php }
+{
+
+	if( false === get_theme_mod( 'rgdeuce_display_utilitybar' ) ) { ?>
+    <!-- rgdeuce customizer CSS -->
+	<style>
+	#utility-bar { display: none; }
+	</style>
+<?php } // end if 
 
 add_action( 'wp_head', 'rgdeuce_add_customizer_css' );
 
@@ -364,7 +579,11 @@ function my_social_media_icons() {
             foreach ( $active_sites as $active_site ) {
  
 	            /* setup the class */
-		        $class = 'fa fa-' . $active_site;
+		        $class = 'fa fa-' . $active_site.'-square';
+                if ( $active_site == 'instagram' ) {
+                    $class = 'fa fa-' . $active_site;
+                }
+ 
  
                 if ( $active_site == 'email' ) {
                     ?>

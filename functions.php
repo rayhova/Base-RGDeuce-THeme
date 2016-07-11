@@ -131,6 +131,63 @@ function rgdeuce_widgets_init() {
 		'before_title' => '<h1 class="widget-title">',
 		'after_title' => '</h1>',
 	) );
+	register_sidebar( array(
+		'name' => __( 'Home Bucket 1', 'rgdeuce' ),
+		'id' => 'home-bucket-1',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
+	register_sidebar( array(
+		'name' => __( 'Home Bucket 2', 'rgdeuce' ),
+		'id' => 'home-bucket-2',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
+	register_sidebar( array(
+		'name' => __( 'Home Bucket 3', 'rgdeuce' ),
+		'id' => 'home-bucket-3',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
+	register_sidebar( array(
+		'name' => __( 'Home Bucket 4', 'rgdeuce' ),
+		'id' => 'home-bucket-4',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
+	register_sidebar( array(
+		'name' => __( 'Home Bucket 5', 'rgdeuce' ),
+		'id' => 'home-bucket-5',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
+	register_sidebar( array(
+		'name' => __( 'Home Bucket 6', 'rgdeuce' ),
+		'id' => 'home-bucket-6',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
+	register_sidebar( array(
+		'name' => __( 'Utility Bar Widget', 'rgdeuce' ),
+		'id' => 'utility-bar-widget',
+		'before_widget' => '<aside id="%1$s" class="utility-bar-widget widget %2$s">',
+		'after_widget' => "</aside>",
+		'before_title' => '<h1 class="widget-title">',
+		'after_title' => '</h1>',
+	) );
+
 }
 add_action( 'widgets_init', 'rgdeuce_widgets_init' );
 
@@ -176,7 +233,7 @@ function rgdeuce_scripts() {
 add_action( 'wp_enqueue_scripts', 'rgdeuce_scripts' );
 function google_fonts() {
 	$query_args = array(
-		'family' => 'Open+Sans:400,300,400italic,600,700,800,700italic',
+		'family' => 'Open+Sans:400,300,400italic,600,700,800,700italic', 'Raleway:400,700,300,100,500,800,400italic,100italic,500italic,700italic,800italic','Roboto:400,100,100italic,300,300italic,400italic,900italic,500,500italic,700,700italic,900','Slabo+27px','Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic','Montserrat:400,700|Ubuntu:400,300,300italic,400italic,500,500italic,700,700italic',
 		'subset' => 'latin,latin-ext',
 	);
 	wp_register_style( 'google_fonts', add_query_arg( $query_args, "//fonts.googleapis.com/css" ), array(), null );
@@ -215,6 +272,45 @@ require get_template_directory() . '/inc/jetpack.php';
 require get_template_directory() . '/inc/plugin-include.php';
 
 add_filter('widget_text', 'do_shortcode');
+//Opengraph for FB
+function doctype_opengraph($output) {
+    return $output . '
+    xmlns:og="http://opengraphprotocol.org/schema/"
+    xmlns:fb="http://www.facebook.com/2008/fbml"';
+}
+add_filter('language_attributes', 'doctype_opengraph');
+function fb_opengraph() {
+    global $post;
+ 
+    if(is_single()) {
+        if(has_post_thumbnail($post->ID)) {
+            $img_src = wp_get_attachment_image_src(get_post_thumbnail_id( $post->ID ), 'medium');
+        } else {
+            $img_src = get_stylesheet_directory_uri() . '/images/logo.jpg';
+        }
+        if($excerpt = $post->post_excerpt) {
+            $excerpt = strip_tags($post->post_excerpt);
+            $excerpt = str_replace("", "'", $excerpt);
+        } else {
+            $excerpt = get_bloginfo('description');
+        }
+        ?>
+ 
+    <meta property="og:title" content="<?php echo the_title(); ?>"/>
+    <meta property="og:description" content="<?php echo $excerpt; ?>"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:url" content="<?php echo the_permalink(); ?>"/>
+    <meta property="og:site_name" content="<?php echo get_bloginfo(); ?>"/>
+    <meta property="og:image" content="<?php echo $img_src; ?>"/>
+ 
+<?php
+    } else {
+        return;
+    }
+}
+add_action('wp_head', 'fb_opengraph', 5);
+
+
 
 
 add_action( 'wp_enqueue_scripts', 'add_jquery' );
@@ -242,6 +338,25 @@ function fixed_menu_onscroll()
 <?php
 }
 
+function slide_out_mobile_nav()
+{
+?>
+	<script type="text/javascript">
+	jQuery(document).ready(function($){
+		$('#menu-toggle').click(function() {
+        if($('#menu-toggle').hasClass('closed')) {
+            $('#mobile-nav').animate({left: "0"}, 400);
+            $(this).removeClass('closed').addClass('open');
+         }
+        else if($('#menu-toggle').hasClass('open')) {
+            $('#mobile-nav').animate({left: "-250px"}, 400);
+            $(this).removeClass('open').addClass('closed');
+          }  
+    });
+});
+</script>
+<?php
+}
 
 add_image_size( 'team-thumb', 250, 250, array( 'center', 'center' ) ); // Hard crop left top
 
@@ -252,8 +367,33 @@ function my_custom_sizes( $sizes ) {
         'team-thumb' => __( 'Team Thumbnail' ),
     ) );
 }
+function rgdeuce_sanitize_copyright( $input ) {
+    return strip_tags( stripslashes( $input ) );
+}
+function page_title_bg()
+{
 
+// declare $post global if used outside of the loop
+    global $post;
 
+    // check to see if the theme supports Featured Images, and one is set
+    if (current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail( $post->ID )) {
+            
+        // specify desired image size in place of 'full'
+        $page_bg_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full' );
+        $page_bg_image_url = $page_bg_image[0]; // this returns just the URL of the image
+
+    } else {
+        // the fallback – our current active theme's default bg image
+        $page_bg_image_url = get_background_image();
+    }
+
+    // And below, spit out the <style> tag... ?>
+    <style type="text/css" id="custom-background-css-override">
+        .page-template-interior header.entry-header { background: url('<?php echo $page_bg_image_url; ?>') center; }
+    </style>
+<?php
+}
 /*
 * Creating a function to create our CPT
 */
@@ -262,7 +402,7 @@ function my_custom_sizes( $sizes ) {
 * Creating a function to create our CPT
 */
 
-function custom_post_type() {
+function team_members_post_type() {
 
 // Set UI labels for Custom Post Type
 	$labels = array(
@@ -319,7 +459,7 @@ function custom_post_type() {
 * unnecessarily executed. 
 */
 
-add_action( 'init', 'custom_post_type', 0 );
+add_action( 'init', 'team_members_post_type', 0 );
 
 
 /* Hook into the 'init' action so that the function

@@ -48,10 +48,94 @@
 			$('nav ul#primary-menu li a').css('color', newval );
 		} );
 	} );
-	//Update main menu link color in real time...
+	//Update Header in real time...
 	wp.customize( 'rgdeuce_header_color', function( value ) {
 		value.bind( function( newval ) {
-			$('header#masthead').css('color', newval );
+			$('header#masthead').css('background', newval );
 		} );
 	} );
+	//Update Footer in real time...
+	wp.customize( 'rgdeuce_footer_color', function( value ) {
+		value.bind( function( newval ) {
+			$('footer').css('background', newval );
+		} );
+	} );
+	wp.customize( 'rgdeuce_bottom_footer_color', function( value ) {
+		value.bind( function( newval ) {
+			$('.bottom-footer').css('background', newval );
+		} );
+	} );
+	wp.customize( 'rgdeuce_footer_text_color', function( value ) {
+		value.bind( function( newval ) {
+			$('footer').css('color', newval );
+		} );
+	} );
+	wp.customize( 'rgdeuce_bottom_text_footer_color', function( value ) {
+		value.bind( function( newval ) {
+			$('.bottom-footer').css('color', newval );
+		} );
+	} );
+	//Update UtilityBar...
+	wp.customize( 'rgdeuce_utilitybar_color', function( value ) {
+		value.bind( function( newval ) {
+			$('#utility-bar').css('background', newval );
+		} );
+	} );
+	//display utility bar
+	wp.customize( 'rgdeuce_display_utilitybar', function( value ) {
+    value.bind( function( to ) {
+        false === to ? $( '#utility-bar' ).hide() : $( '#utility-bar' ).show();
+    } );
+//typography
+    wp.customize( 'rgdeuce_main_font', function( value ) {
+    value.bind( function( to ) {
+ 
+        switch( to.toString().toLowerCase() ) {
+ 
+            case 'opensans':
+                sFont = 'Open Sans';
+                break;
+ 
+            case 'arial':
+                sFont = 'Arial';
+                break;
+ 
+            case 'courier':
+                sFont = 'Courier New, Courier';
+                break;
+ 
+            case 'roboto':
+                sFont = 'Roboto';
+                break;
+
+            case 'times':
+                sFont = 'Times New Roman';
+                break;
+            case 'slabo':
+                sFont = 'Slabo 27px';
+                break;
+            case 'lato':
+                sFont = 'Lato';
+                break;
+            case 'montserrat':
+                sFont = 'Montserrat';
+                break;
+            case 'ubuntu':
+                sFont = 'Ubuntu';
+                break;
+ 
+            default:
+                sFont = 'Open Sans';
+                break;
+ 
+        }
+ 
+        $( 'body' ).css({
+            fontFamily: sFont
+        });
+ 
+    });
+ 
+});
+} );
 } )( jQuery );

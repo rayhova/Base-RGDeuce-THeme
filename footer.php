@@ -17,6 +17,11 @@
 	<div class="container container-fluid">
 <div class="col-md-4">
 		<div class="widget-area footer-left" role="complementary">
+		<?php if ( get_theme_mod( 'rgdeuce_footer_logo' ) ) : ?>
+    <div class='site-logo'>
+        <a href='<?php echo esc_url( home_url( '/' ) ); ?>' title='<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>' rel='home'><img src='<?php echo esc_url( get_theme_mod( 'rgdeuce_footer_logo' ) ); ?>' alt='<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>'></a>
+    </div>
+		<?php endif; ?>
 			<?php dynamic_sidebar( 'footer-left' ); ?>
 		</div>
 		</div>
@@ -31,13 +36,21 @@
 		</div>
 		</div>
 </div> <!-- .container -->
-	<?php wp_nav_menu( array( 'theme_location' => 'footer-menu' ) ); ?>
-		<div class="site-info">
-			<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'rgdeuce' ) ); ?>"><?php printf( esc_html__( 'Proudly powered by %s', 'rgdeuce' ), 'WordPress' ); ?></a>
-			<span class="sep"> | </span>
-			<?php printf( esc_html__( 'Theme: %1$s by %2$s.', 'rgdeuce' ), 'rgdeuce', '<a href="http://rgdeucemedia.com" rel="designer">RGDeuce Media</a>' ); ?>
+	<div class="bottom-footer">
+		<div class="container container-fluid">
+			<div class="col-md-6">
+			<?php wp_nav_menu( array( 'theme_location' => 'footer-menu', 'menu_id' => 'menu-footer' ) ); ?>
+			<div class="site-info">
+							<?php echo get_theme_mod( 'rgdeuce_footer_text' ); ?>
+							<br />
+							RGDeuce Theme Powered By <a href="http://rgdeucemedia.com" rel="designer" target="_blank">RGDeuce Media</a>
+						</div><!-- .site-info -->
+			</div>
+			<div class="col-md-6
+			"><div class="footer-social"><?php my_social_media_icons() ?></div></div>
+		</div><!-- .container container-fluid -->
 		</div><!-- .site-info -->
-	</footer><!-- #colophon -->
+	</footer><!-- .bottom-footer -->
 </div><!-- #page -->
 
 <?php wp_footer(); ?>
