@@ -1,0 +1,22 @@
+
+h3.hb-title {
+    text-align: center;
+}
+
+.home-buckets i.fa {
+    font-size: 100px;
+    border: 5px solid;
+    border-radius: 100px;
+    padding: 45px;
+    margin: 0 auto;
+    display: block;
+    width: 200px;
+}
+.hb-image img {
+    margin: 0 auto;
+    display: block;
+}
+
+.hb-text {
+    text-align: center;
+}	

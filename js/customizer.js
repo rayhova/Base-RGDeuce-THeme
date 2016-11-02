@@ -57,7 +57,7 @@
 	//Update Footer in real time...
 	wp.customize( 'rgdeuce_footer_color', function( value ) {
 		value.bind( function( newval ) {
-			$('footer').css('background', newval );
+			$('footer#colophon').css('background', newval );
 		} );
 	} );
 	wp.customize( 'rgdeuce_bottom_footer_color', function( value ) {
@@ -67,7 +67,7 @@
 	} );
 	wp.customize( 'rgdeuce_footer_text_color', function( value ) {
 		value.bind( function( newval ) {
-			$('footer').css('color', newval );
+			$('footer#colophon').css('color', newval );
 		} );
 	} );
 	wp.customize( 'rgdeuce_bottom_text_footer_color', function( value ) {

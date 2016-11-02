@@ -15,6 +15,7 @@
 </div><!-- #container -->
 	<footer id="colophon" class="site-footer" role="contentinfo">
 	<div class="container container-fluid">
+	<div class="top-footer">
 <div class="col-md-4">
 		<div class="widget-area footer-left" role="complementary">
 		<?php if ( get_theme_mod( 'rgdeuce_footer_logo' ) ) : ?>
@@ -36,15 +37,14 @@
 		</div>
 		</div>
 </div> <!-- .container -->
+</div><!-- .top-footer -->
 	<div class="bottom-footer">
 		<div class="container container-fluid">
 			<div class="col-md-6">
 			<?php wp_nav_menu( array( 'theme_location' => 'footer-menu', 'menu_id' => 'menu-footer' ) ); ?>
-			<div class="site-info">
-							<?php echo get_theme_mod( 'rgdeuce_footer_text' ); ?>
-							<br />
-							RGDeuce Theme Powered By <a href="http://rgdeucemedia.com" rel="designer" target="_blank">RGDeuce Media</a>
-						</div><!-- .site-info -->
+			<div class="site-info"><?php echo get_theme_mod( 'rgdeuce_footer_text' ); ?>
+			<br />RGDeuce Theme Powered By <a href="http://rgdeucemedia.com" rel="designer" target="_blank">RGDeuce Media</a>
+			</div><!-- .site-info -->
 			</div>
 			<div class="col-md-6
 			"><div class="footer-social"><?php my_social_media_icons() ?></div></div>

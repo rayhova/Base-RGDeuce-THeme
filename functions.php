@@ -215,7 +215,7 @@ add_action( 'init', 'register_mobile_menu' );
  * Enqueue scripts and styles.
  */
 function rgdeuce_scripts() {
-	wp_enqueue_style( 'rgdeuce-style', get_stylesheet_uri() );
+	
 
 	wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css' );
 
@@ -228,18 +228,19 @@ function rgdeuce_scripts() {
 		wp_enqueue_script( 'comment-reply' );
 	}
 
-	wp_enqueue_script( 'bootstrap', get_template_directory_uri() . '/bootstrap/js/bootstrap.min.js', array( 'jquery' ), 'v3.3.5', true );
+	wp_enqueue_script( 'bootstrap', get_template_directory_uri() . '/bootstrap/js/bootstrap.min.js', array( 'jquery' ), 'v3.3.7', true );
+	wp_enqueue_style( 'bootstrap-min', get_template_directory_uri() . '/bootstrap/css/bootstrap.min.css'	 );
+	wp_enqueue_style( 'bootstrap-theme', get_template_directory_uri() . '/bootstrap/css/bootstrap-theme.min.css'	 );
+	wp_enqueue_style( 'rgdeuce-style', get_stylesheet_uri() );
 }
 add_action( 'wp_enqueue_scripts', 'rgdeuce_scripts' );
-function google_fonts() {
-	$query_args = array(
-		'family' => 'Open+Sans:400,300,400italic,600,700,800,700italic', 'Raleway:400,700,300,100,500,800,400italic,100italic,500italic,700italic,800italic','Roboto:400,100,100italic,300,300italic,400italic,900italic,500,500italic,700,700italic,900','Slabo+27px','Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic','Montserrat:400,700|Ubuntu:400,300,300italic,400italic,500,500italic,700,700italic',
-		'subset' => 'latin,latin-ext',
-	);
-	wp_register_style( 'google_fonts', add_query_arg( $query_args, "//fonts.googleapis.com/css" ), array(), null );
-            }
-            
-add_action('wp_enqueue_scripts', 'google_fonts');
+
+//Add Google Fonts
+add_action('init', 'google_font_style'); 
+  function google_font_style(){ 
+    wp_register_style( 'GoogleFonts', 'http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,700,800,700italic|Raleway:400,700,300,100,500,800,400italic,100italic,500italic,700italic,800italic|Roboto:400,100,100italic,300,300italic,400italic,900italic,500,500italic,700,700italic,900|Slabo+27px|Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic|Montserrat:400,700|Ubuntu:300,300i,400,400i,500,500i,700,700i|Oswald:300,400,700|Source+Sans+Pro:300,300i,400,400i,600,600i,700,700i|Quicksand:300,400,700'); 
+    wp_enqueue_style( 'GoogleFonts' ); 
+ }
 
 /**
  * Implement the Custom Header feature.
@@ -271,6 +272,19 @@ require get_template_directory() . '/inc/jetpack.php';
  */
 require get_template_directory() . '/inc/plugin-include.php';
 
+/**
+ * Load custom post meta
+ */
+require get_template_directory() . '/inc/post-meta.php';
+
+/**
+ * Load custom post type
+ */
+require get_template_directory() . '/inc/custom-post-type.php';
+
+// Include widgets
+require get_template_directory() . '/inc/widgets/widgets.php';
+
 add_filter('widget_text', 'do_shortcode');
 //Opengraph for FB
 function doctype_opengraph($output) {
@@ -285,8 +299,9 @@ function fb_opengraph() {
     if(is_single()) {
         if(has_post_thumbnail($post->ID)) {
             $img_src = wp_get_attachment_image_src(get_post_thumbnail_id( $post->ID ), 'medium');
+            $img_src_url = $img_src[0]; // this returns just the URL of the image
         } else {
-            $img_src = get_stylesheet_directory_uri() . '/images/logo.jpg';
+            $img_src_url = get_stylesheet_directory_uri() . '/inc/images/logo.jpg';
         }
         if($excerpt = $post->post_excerpt) {
             $excerpt = strip_tags($post->post_excerpt);
@@ -301,7 +316,7 @@ function fb_opengraph() {
     <meta property="og:type" content="article"/>
     <meta property="og:url" content="<?php echo the_permalink(); ?>"/>
     <meta property="og:site_name" content="<?php echo get_bloginfo(); ?>"/>
-    <meta property="og:image" content="<?php echo $img_src; ?>"/>
+    <meta property="og:image" content="<?php echo $img_src_url; ?>"/>
  
 <?php
     } else {
@@ -310,11 +325,15 @@ function fb_opengraph() {
 }
 add_action('wp_head', 'fb_opengraph', 5);
 
-
+function insert_analytics() {
+    echo (get_theme_mod( 'rgdeuce_ga_code' ));
+}
+add_action('wp_head', 'insert_analytics');
 
 
 add_action( 'wp_enqueue_scripts', 'add_jquery' );
 add_action( 'wp_footer', 'fixed_menu_onscroll' );
+add_action( 'wp_footer', 'slide_out_mobile_nav' );
 
 function add_jquery()
 {
@@ -322,7 +341,7 @@ function add_jquery()
 }
 
 function fixed_menu_onscroll()
-{
+{ if( true === get_theme_mod( 'rgdeuce_sticky_header' ) ) { 
 ?>
 	<script type="text/javascript">
 	jQuery(document).ready(function($){
@@ -336,6 +355,7 @@ function fixed_menu_onscroll()
 	});
 	</script>
 <?php
+}
 }
 
 function slide_out_mobile_nav()
@@ -358,136 +378,45 @@ function slide_out_mobile_nav()
 <?php
 }
 
-add_image_size( 'team-thumb', 250, 250, array( 'center', 'center' ) ); // Hard crop left top
+add_image_size( 'team-thumb', 300, 300, array( 'center', 'center' ) ); // Hard crop center center
+add_image_size( 'service-thumb', 200, 200, array( 'center', 'center' ) ); // Hard crop center center
 
 add_filter( 'image_size_names_choose', 'my_custom_sizes' );
  
 function my_custom_sizes( $sizes ) {
     return array_merge( $sizes, array(
         'team-thumb' => __( 'Team Thumbnail' ),
+        'service-thumb' => __( 'Service Thumbnail' ),
     ) );
 }
 function rgdeuce_sanitize_copyright( $input ) {
     return strip_tags( stripslashes( $input ) );
 }
+
+// Custom Page Title background Using Meta
 function page_title_bg()
 {
 
 // declare $post global if used outside of the loop
     global $post;
-
+ if ( !is_page_template( 'home-page.php' ) ) { 
+    $page_bg_image = get_post_meta($post->ID,'meta-image',true );
     // check to see if the theme supports Featured Images, and one is set
-    if (current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail( $post->ID )) {
+    if ( !empty($page_bg_image)) {
             
         // specify desired image size in place of 'full'
-        $page_bg_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full' );
-        $page_bg_image_url = $page_bg_image[0]; // this returns just the URL of the image
+        $page_bg_image_url = $page_bg_image; // this returns just the URL of the image
 
     } else {
         // the fallback – our current active theme's default bg image
-        $page_bg_image_url = get_background_image();
+        $page_bg_image_url = get_theme_mod( 'rgdeuce_page_header' );
     }
 
     // And below, spit out the <style> tag... ?>
     <style type="text/css" id="custom-background-css-override">
-        .page-template-interior header.entry-header { background: url('<?php echo $page_bg_image_url; ?>') center; }
+        .page-head-bg header.entry-header { background: url('<?php echo $page_bg_image_url; ?>') center; }
     </style>
 <?php
 }
-/*
-* Creating a function to create our CPT
-*/
-
-/*
-* Creating a function to create our CPT
-*/
-
-function team_members_post_type() {
-
-// Set UI labels for Custom Post Type
-	$labels = array(
-		'name'                => _x( 'Team Members', 'Post Type General Name', 'rgdeuce' ),
-		'singular_name'       => _x( 'Team Member', 'Post Type Singular Name', 'rgdeuce' ),
-		'menu_name'           => __( 'Team Members', 'rgdeuce' ),
-		'parent_item_colon'   => __( 'Parent Team Member', 'rgdeuce' ),
-		'all_items'           => __( 'All Team Members', 'rgdeuce' ),
-		'view_item'           => __( 'View Team Members', 'rgdeuce' ),
-		'add_new_item'        => __( 'Add New Team Members', 'rgdeuce' ),
-		'add_new'             => __( 'Add New', 'rgdeuce' ),
-		'edit_item'           => __( 'Edit Team Member', 'rgdeuce' ),
-		'update_item'         => __( 'Update Team Member', 'rgdeuce' ),
-		'search_items'        => __( 'Search Team Members', 'rgdeuce' ),
-		'not_found'           => __( 'Not Found', 'rgdeuce' ),
-		'not_found_in_trash'  => __( 'Not found in Trash', 'rgdeuce' ),
-	);
-	
-// Set other options for Custom Post Type
-	
-	$args = array(
-		'label'               => __( 'team-members	', 'rgdeuce' ),
-		'description'         => __( 'Team Members', 'rgdeuce' ),
-		'labels'              => $labels,
-		// Features this CPT supports in Post Editor
-		'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields', ),
-		// You can associate this CPT with a taxonomy or custom taxonomy. 
-		'taxonomies'          => array( 'departments' ),
-		/* A hierarchical CPT is like Pages and can have
-		* Parent and child items. A non-hierarchical CPT
-		* is like Posts.
-		*/	
-		'hierarchical'        => false,
-		'public'              => true,
-		'show_ui'             => true,
-		'show_in_menu'        => true,
-		'show_in_nav_menus'   => true,
-		'show_in_admin_bar'   => true,
-		'menu_position'       => 5,
-		'can_export'          => true,
-		'has_archive'         => true,
-		'exclude_from_search' => false,
-		'publicly_queryable'  => true,
-		'capability_type'     => 'post',
-	);
-	
-	// Registering your Custom Post Type
-	register_post_type( 'team-members', $args );
-
 }
-
-/* Hook into the 'init' action so that the function
-* Containing our post type registration is not 
-* unnecessarily executed. 
-*/
-
-add_action( 'init', 'team_members_post_type', 0 );
-
-
-/* Hook into the 'init' action so that the function
-* Containing our post type registration is not 
-* unnecessarily executed. 
-*/
-
-
-// register two taxonomies to go with the post type
-function team_register_taxonomy() {
-	// set up labels
-	$labels = array(
-		'name'              => 'Team Departments',
-		'singular_name'     => 'Team Department',
-		'search_items'      => 'Search Team Departments',
-		'all_items'         => 'All Team Departments',
-		'edit_item'         => 'Edit Team Department',
-		'update_item'       => 'Update Team Departments',
-		'add_new_item'      => 'Add New Team Department',
-		'new_item_name'     => 'New Team Department',
-		'menu_name'         => 'Team Departments'
-	);
-	// register taxonomy
-	register_taxonomy( 'teamcat', 'team-members', array(
-		'hierarchical' => true,
-		'labels' => $labels,
-		'query_var' => true,
-		'show_admin_column' => true
-	) );
-}
-add_action( 'init', 'team_register_taxonomy' );
+add_action('wp_head', 'page_title_bg');

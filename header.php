@@ -56,6 +56,33 @@
 		</div>
 		</div><!-- .container -->
 	</header><!-- #masthead -->
+	<?php if( true === get_theme_mod( 'rgdeuce_display_page_header' ) ) {  
+	 if (!is_front_page()  && !is_singular( array( 'news', 'testimonials', 'post', 'team-members', 'portfolio', 'services' ) ) ) { ?>
+		<div class="page-head-bg">
+			<header class="entry-header">
+	        <div class="container container-fluid">
+	        <div id="content" class="site-content">
+			<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
+	        </div>
+	        </div>
+			</header><!-- .entry-header --> 
+		</div>
+			<?php }
+elseif (is_singular( array( 'news', 'testimonials', 'post', 'team-members', 'portfolio', 'services' ) )) {
+$obj = get_post_type_object(get_post_type()); ?>
+	<div class="page-head-bg">
+			<header class="entry-header">
+	        <div class="container container-fluid">
+	        <div id="content" class="site-content">
+			<h1 class="entry-title"><?php echo $obj->labels->name; ?></h1>
+	        </div>
+	        </div>
+			</header><!-- .entry-header --> 
+		</div>
+<?php }
+}
+
+			 ?>
 	<?php if ( is_page_template( 'home-page.php' ) || is_page_template( 'full-width-page.php' )  ) { ?>
 	<div class="container full-width"> 
 <?php } else { ?>
